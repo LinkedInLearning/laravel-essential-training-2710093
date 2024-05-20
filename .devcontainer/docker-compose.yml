@@ -1,47 +1,67 @@
-version: '3.8'
-
-services: 
-  app:
+# For more information: https://laravel.com/docs/sail
+version: '3'
+services:
+  laravel.test:
     build:
-      context: .
+      context: ./docker
       dockerfile: Dockerfile
       args:
-        # Update 'VARIANT' to pick a version of PHP version: 8, 8.1, 8.0, 7, 7.4
-        # Append -bullseye or -buster to pin to an OS version.
-        # Use -bullseye variants on local arm64/Apple Silicon.
-        VARIANT: "8-bullseye"
-        # Optional Node.js version
-        NODE_VERSION: "lts/*"
-
-
-    volumes:
-      - ..:/workspace:cached
-
-    # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity
-
-    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:db
-
-    # Uncomment the next line to use a non-root user for all processes.
-    # user: vscode
-
-    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
-
-  db:
-    image: mariadb:10.4
-    restart: unless-stopped
-    volumes:
-      - mariadb-data:/var/lib/mysql
+        WWWGROUP: '${WWWGROUP}'
+    image: sail-8.2/app
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '${APP_PORT:-80}:80'
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     environment:
-      MYSQL_ROOT_PASSWORD: mariadb
-      MYSQL_DATABASE: mariadb
-      MYSQL_USER: mariadb
-      MYSQL_PASSWORD: mariadb
-
-    # Add "forwardPorts": ["3306"] to **devcontainer.json** to forward MariaDB locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
-  
+      WWWUSER: '${WWWUSER}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+    volumes:
+      - '.:/var/www/html'
+    networks:
+      - sail
+    depends_on:
+      - mysql
+      - redis
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - 'sail-mysql:/var/lib/mysql'
+      - './docker/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+    networks:
+      - sail
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+      retries: 3
+      timeout: 5s
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'sail-redis:/data'
+    networks:
+      - sail
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      retries: 3
+      timeout: 5s
+networks:
+  sail:
+    driver: bridge
 volumes:
-  mariadb-data:
+  sail-mysql:
+    driver: local
+  sail-redis:
+    driver: local

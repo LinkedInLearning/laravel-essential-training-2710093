@@ -1,30 +1,36 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.233.0/containers/php-mariadb
-// Update the VARIANT arg in docker-compose.yml to pick a PHP version
+// For format details, see https://aka.ms/devcontainer.json.
 {
-  "name": "PHP & MariaDB (Community)",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/workspace",
+  "name": "Laravel",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "laravel.test",
+  "workspaceFolder": "/var/www/html",
   // Set *default* container specific settings.json values on container create.
   "settings": {},
   // Add the IDs of extensions you want installed when the container is created.
-  "extensions": [
-    "GitHub.github-vscode-theme",
-    "brapifra.phpserver",
-    "xdebug.php-debug",
-    "bmewburn.vscode-intelephense-client",
-    "mrmlnc.vscode-apache"
-  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "editorconfig.editorconfig",
+        "ryannaddy.laravel-artisan",
+        "bmewburn.vscode-intelephense-client",
+        "MehediDracula.php-namespace-resolver",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "onecentlin.laravel5-snippets",
+        "stef-k.laravel-goto-controller",
+        "codingyu.laravel-goto-view",
+        "onecentlin.laravel-blade",
+        "austenc.laravel-blade-spacer",
+        "mikestead.dotenv",
+        "christian-kohler.path-intellisense",
+        "esbenp.prettier-vscode",
+        "CoenraadS.bracket-pair-colorizer",
+        "damms005.devdb"
+      ]
+    }
+  },
   // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
-  "forwardPorts": [
-    8080,
-    3306
-  ],
-  "onCreateCommand": "echo PS1='\"$ \"' >> ~/.bashrc", //Set Terminal Prompt to $
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
-  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-  "remoteUser": "vscode"
+  "forwardPorts": [80],
+  "postCreateCommand": "chown -R 1000:1000 /var/www/html && composer install && php artisan key:generate && echo \"ASSET_URL=https://${CODESPACE_NAME}-80.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}\" >> .env",
+  "remoteUser": "sail"
 }
 // DevContainer Reference: https://code.visualstudio.com/docs/remote/devcontainerjson-reference

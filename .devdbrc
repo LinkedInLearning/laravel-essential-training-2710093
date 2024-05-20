@@ -1,0 +1,11 @@
+[
+  {
+    "name": "MySQL database",
+    "type": "mysql",
+    "host": "mysql",
+    "port": "3306",
+    "username": "sail",
+    "password": "password",
+    "database": "laravel"
+  }
+]
