@@ -26,7 +26,7 @@
         "christian-kohler.path-intellisense",
         "esbenp.prettier-vscode",
         "CoenraadS.bracket-pair-colorizer",
-        "damms005.devdb"
+        "cweijan.vscode-mysql-client2"
       ]
     }
   },
