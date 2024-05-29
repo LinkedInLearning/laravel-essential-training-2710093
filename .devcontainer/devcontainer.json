@@ -31,7 +31,7 @@
     }
   },
   // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
-  "forwardPorts": [80],
+  "forwardPorts": [80,5173],
   "postCreateCommand": "chown -R 1000:1000 /var/www/html && composer install && php artisan key:generate && echo \"ASSET_URL=https://${CODESPACE_NAME}-80.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}\" >> .env && php artisan migrate",
   "remoteUser": "sail"
 }
