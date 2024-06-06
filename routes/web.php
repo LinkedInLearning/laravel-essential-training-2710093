@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GreetingController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,3 +13,5 @@ Route::get('/home', function () {
 Route::get('/about', function () {
     return view('about');
 });
+
+Route::get('/hello', [GreetingController::class, 'index']);
