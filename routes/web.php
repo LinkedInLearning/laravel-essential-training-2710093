@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return "<h1>Welcome</h1>";
+    return view('welcome');
 });
 
 Route::get('/home', function () {
