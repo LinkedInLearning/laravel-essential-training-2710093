@@ -7,5 +7,9 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    return view('home', ['name' => "Shruti"]);
+    return view('home');
+});
+
+Route::get('/about', function () {
+    return view('about');
 });
