@@ -5,20 +5,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    // 1. Using raw SQL queries
-    // $users = DB::select('select * from users');
-    // dd($users);
+    // Get the student model where email is john@exmaple.com
 
-    // 2. Query builder
-    // $users = DB::table('users')->select(['name', 'email'])->whereNotNull('email')->orderBy('name')->get();
-    // dd($users);
+    // Update the 'status' column with the value 'active'
 
-    // 3. Eloquent ORM
-    $students = Student::select(['name', 'email'])->whereNotNull('email')->orderBy('name')->get();
-    // dd($students);
+    // Save the model
 
-    $student = new Student();
-    $student->name = "Jane";
-    $student->email = "jane@example.com";
-    $student->save();
+    // Dump the result
+
 });
