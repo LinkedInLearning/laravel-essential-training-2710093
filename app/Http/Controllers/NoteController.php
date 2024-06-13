@@ -63,7 +63,11 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        //
+        if ($note->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('notes.edit', ['note' => $note]);
     }
 
     /**
