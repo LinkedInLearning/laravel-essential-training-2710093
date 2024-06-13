@@ -15,4 +15,9 @@ class Note extends Model
     {
         return 'uuid';
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
