@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Notes
+            {{  request()->routeIs('notes.index') ? 'Notes' : 'Trash'  }}
         </h2>
     </x-slot>
 
@@ -10,9 +10,12 @@
 
             <x-alert-success>{{ session('success') }}</x-alert-success>
 
+            @if(request()->routeIs('notes.index'))
             <x-link-button href="{{ route('notes.create') }}">
                 + New note
             </x-link-button>
+            @endif
+            
             @forelse ($notes as $note)
             <div class="bg-white p-6 overflow-hidden shadow-sm sm:rounded-lg">
               <h2 class="font-bold text-2xl text-indigo-600">
