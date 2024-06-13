@@ -14,8 +14,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::id();
-        $notes = Note::where('user_id', $user_id)->latest('updated_at')->paginate(5);
+        $notes = Note::whereBelongsTo(Auth::user())->latest('updated_at')->paginate(5);
         return view('notes.index')->with('notes', $notes);
     }
 
@@ -37,13 +36,11 @@ class NoteController extends Controller
             'text' => 'required'
         ]);
 
-        $note = new Note([
-            'user_id' => Auth::id(),
+        $note = Auth::user()->notes()->create([
             'uuid' => Str::uuid(),
             'title' => $request->title,
             'text' => $request->text
         ]);
-        $note->save();
 
         return to_route('notes.show', $note);
     }
@@ -53,7 +50,7 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
 
@@ -65,7 +62,7 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
 
@@ -77,7 +74,7 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
 
@@ -100,7 +97,7 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
 
