@@ -19,7 +19,13 @@
             @forelse ($notes as $note)
             <div class="bg-white p-6 overflow-hidden shadow-sm sm:rounded-lg">
               <h2 class="font-bold text-2xl text-indigo-600">
-                <a href="{{ route('notes.show', $note) }}" class="hover:underline">{{ $note->title }}</a>
+                <a
+                    @if(request()->routeIs('notes.index'))
+                    href="{{ route('notes.show', $note) }}"
+                    @else
+                    href="{{ route('trashed.show', $note) }}"
+                    @endif
+                    class="hover:underline">{{ $note->title }}</a>
                 </h2>
               <p class="mt-2">{{ Str::limit($note->text, 200, '...') }}</p>
               <span class="block mt-4 text-sm opacity-70">{{ $note->updated_at->diffForHumans() }}</span>
