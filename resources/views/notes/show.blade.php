@@ -28,8 +28,12 @@
             <div class="flex gap-6">
               <p class="opacity-70"><strong>Deleted:</strong> {{ $note->deleted_at->diffForHumans() }}</p>
 
-              {{-- <x-link-button href="{{ route('notes.edit', $note) }}" class="ml-auto">Edit Note</x-link-button>
-              <form action="{{ route('notes.destroy', $note) }}" method="post">
+              <form class="ml-auto" action="{{ route('trashed.update', $note) }}" method="post">
+                @method('put')
+                @csrf
+                <x-primary-button>Restore Note</x-primary-button>
+              </form>
+              {{-- <form action="{{ route('notes.destroy', $note) }}" method="post">
                 @method('delete')
                 @csrf
                 <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
