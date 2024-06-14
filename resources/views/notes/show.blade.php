@@ -33,13 +33,13 @@
                 @csrf
                 <x-primary-button>Restore Note</x-primary-button>
               </form>
-              {{-- <form action="{{ route('notes.destroy', $note) }}" method="post">
+              <form action="{{ route('trashed.destroy', $note) }}" method="post">
                 @method('delete')
                 @csrf
                 <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
-                  onclick="return confirm('Move to trash?')"
-                >Move to Trash</x-primary-button>
-              </form> --}}
+                  onclick="return confirm('Are you sure you wish to delete this note forever? This action cannot be undone.')"
+                >Delete Forever</x-primary-button>
+              </form>
             </div>
             @endif
             <div class="bg-white p-6 overflow-hidden shadow-sm sm:rounded-lg">
