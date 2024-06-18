@@ -11,14 +11,28 @@
               <form action="{{ route('notes.update', $note) }}" method="post">
                 @method('put')
                 @csrf
+                
                 <x-text-input name="title" class="w-full" placeholder="Note title" value="{{ @old('title', $note->title) }}"></x-text-input>
                 @error('title')
                     <div class="text-sm mt-1 text-red-500">{{ $message }}</div>
                 @enderror
+                
                 <x-textarea name="text" placeholder="Type your note" rows="8" value="{{ @old('text', $note->text) }}" class="w-full mt-6"></x-textarea>
                 @error('text')
                     <div class="text-sm mt-1 text-red-500">{{ $message }}</div>
                 @enderror
+                
+                <select name="notebook_id" class="w-full mt-6 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                    <option value="">-- Select Notebook --</option>
+                    @foreach ($notebooks as $notebook)
+                        <option value="{{ $notebook->id }}"
+                            @if($notebook->id === $note->notebook_id)
+                            selected
+                            @endif
+                            >{{ $notebook->name }}</option>
+                    @endforeach
+                </select>
+                
                 <x-primary-button class="mt-6">Save note</x-primary-button>
               </form>
             </div>

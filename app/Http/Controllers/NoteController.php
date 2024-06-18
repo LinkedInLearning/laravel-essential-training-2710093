@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\Notebook;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,8 @@ class NoteController extends Controller
      */
     public function create()
     {
-        return view('notes.create');
+        $notebooks = Notebook::where('user_id', Auth::id())->get();
+        return view('notes.create')->with('notebooks', $notebooks);
     }
 
     /**
@@ -39,8 +41,10 @@ class NoteController extends Controller
         $note = Auth::user()->notes()->create([
             'uuid' => Str::uuid(),
             'title' => $request->title,
-            'text' => $request->text
+            'text' => $request->text,
+            'notebook_id' => $request->notebook_id
         ]);
+
 
         return to_route('notes.show', $note);
     }
@@ -66,7 +70,9 @@ class NoteController extends Controller
             abort(403);
         }
 
-        return view('notes.edit', ['note' => $note]);
+        $notebooks = Notebook::where('user_id', Auth::id())->get();
+
+        return view('notes.edit', ['note' => $note, 'notebooks' => $notebooks]);
     }
 
     /**
@@ -85,7 +91,8 @@ class NoteController extends Controller
 
         $note->update([
             'title' => $request->title,
-            'text' => $request->text
+            'text' => $request->text,
+            'notebook_id' => $request->notebook_id
         ]);
 
         return to_route('notes.show', $note)
